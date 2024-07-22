@@ -6,3 +6,5 @@ custom_model.keras
 cache
 *.hdf5
 *.png
+*.trt
+*.safetensors
