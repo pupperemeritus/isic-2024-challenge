@@ -1,4 +1,4 @@
-from safetensors.torch import save_file
+from safetensors.torch import load_model, save_model
 
 import pytorch_lightning as pl
 import torch
@@ -13,7 +13,6 @@ if torch.cuda.is_available():
 
 pl.seed_everything(42, workers=True)
 # Import your model architecture
-# from your_model_file import YourModelClass
 """
 2024 ISIC Challenge primary prize scoring metric
 
@@ -519,34 +518,34 @@ class GuruNet(pl.LightningModule):
 
         return loss
 
-    # def test_step(self, batch, batch_idx):
-    #     (images, metadata), targets = batch
-    #     outputs = self(images, metadata)
-    #     loss = self.loss(outputs, targets)  # targets is already one-hot encoded
+    def test_step(self, batch, batch_idx):
+        (images, metadata), targets = batch
+        outputs = self(images, metadata)
+        loss = self.loss(outputs, targets)  # targets is already one-hot encoded
 
-    #     # Get the probability of the positive class
-    #     pos_probs = outputs[:, 1].float().cpu()
+        # Get the probability of the positive class
+        pos_probs = outputs[:, 1].float().cpu()
 
-    #     # Convert one-hot encoded targets to binary labels
-    #     targets_binary = targets[:, 1].int().cpu()
-    #     rocauc = self.auroc(pos_probs, targets_binary)
+        # Convert one-hot encoded targets to binary labels
+        targets_binary = targets[:, 1].int().cpu()
+        rocauc = self.auroc(pos_probs, targets_binary)
 
-    #     self.log(
-    #         "test_loss",
-    #         loss,
-    #         on_step=True,
-    #         on_epoch=True,
-    #         prog_bar=True,
-    #     )
-    #     self.log(
-    #         "test_pAUC",
-    #         rocauc,
-    #         on_step=True,
-    #         on_epoch=True,
-    #         prog_bar=True,
-    #     )
+        self.log(
+            "test_loss",
+            loss,
+            on_step=True,
+            on_epoch=True,
+            prog_bar=True,
+        )
+        self.log(
+            "test_pAUC",
+            rocauc,
+            on_step=True,
+            on_epoch=True,
+            prog_bar=True,
+        )
 
-    #     return loss
+        return loss
 
     def configure_optimizers(self):
         optimizer = optim.NAdam(
@@ -564,30 +563,16 @@ class GuruNet(pl.LightningModule):
         }
 
 
-def convert_checkpoint(ckpt_path, model_class, output_path):
-    # Initialize your model
-    model = model_class()
-
+def convert_checkpoint(ckpt_path, model_class: GuruNet, output_path):
     # Load the checkpoint
-    checkpoint = torch.load(ckpt_path)
-    model.load_state_dict(checkpoint["state_dict"])
-    model.eval()
+    checkpoint = model_class.load_from_checkpoint(ckpt_path)
 
-    # Determine the output format
-    if output_path.endswith('.pth'):
-        # Save as .pth
-        torch.save(model.state_dict(), output_path)
-        print(f"Model saved as .pth to {output_path}")
-    elif output_path.endswith('.safetensors'):
-        # Save as .safetensors
-        state_dict = model.state_dict()
-        save_file(state_dict, output_path)
-        print(f"Model saved as .safetensors to {output_path}")
-    else:
-        print("Unsupported output format. Use .pth or .safetensors")
+    # Save as .safetensors
+    save_model(checkpoint, output_path)
+    print(f"Model saved as .safetensors to {output_path}")
 
 
 if __name__ == "__main__":
-    ckpt_path = "/home/pupperemeritus/DL/isic-2024-challenge/checkpoints/version_98/gurunet-epoch=62-val_loss=0.33.ckpt"
-    output_path = "/home/pupperemeritus/DL/isic-2024-challenge/model.safetensors"  # or "model.pth"
+    ckpt_path = "/home/pupperemeritus/DL/isic-2024-challenge/checkpoints/version_135/gurunet-epoch=48-val_pAUC=0.18755.ckpt"
+    output_path = "/home/pupperemeritus/DL/isic-2024-challenge/model.safetensors"
     convert_checkpoint(ckpt_path, GuruNet, output_path)
