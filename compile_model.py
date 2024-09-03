@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.cuda.amp import GradScaler
+from torch.amp import GradScaler
 from torchmetrics import Metric
 
 torch.manual_seed(42)
@@ -573,6 +573,6 @@ def convert_checkpoint(ckpt_path, model_class: GuruNet, output_path):
 
 
 if __name__ == "__main__":
-    ckpt_path = "/home/pupperemeritus/DL/isic-2024-challenge/checkpoints/version_135/gurunet-epoch=48-val_pAUC=0.18755.ckpt"
+    ckpt_path = "/home/pupperemeritus/DL/isic-2024-challenge/checkpoints/version_142/gurunet-epoch=48-val_pAUC=0.19894.ckpt"
     output_path = "/home/pupperemeritus/DL/isic-2024-challenge/model.safetensors"
     convert_checkpoint(ckpt_path, GuruNet, output_path)
