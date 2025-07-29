@@ -23,23 +23,3 @@ This repository contains the modified PyTorch Lightning implementation of GuruNe
 ## Usage
 
 Run `competition-draft-pytorch.ipynb` to train and evaluate the model. Use `compile_model.py` to convert checkpoints to `.safetensors`.
-
-## Requirements (minimal)
-
-```
-pytorch-lightning==2.4.0
-torch==2.4.0
-torchvision==0.19.0
-pandas
-numpy
-h5py
-scikit-learn
-einops
-Pillow
-torchmetrics
-safetensors
-joblib
-tensorboard
-
-
-```
