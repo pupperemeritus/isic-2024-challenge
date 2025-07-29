@@ -1,3 +1,5 @@
+from typing_extensions import Type
+from pandas.core.series import sys
 from safetensors.torch import load_model, save_model
 
 import pytorch_lightning as pl
@@ -563,7 +565,7 @@ class GuruNet(pl.LightningModule):
         }
 
 
-def convert_checkpoint(ckpt_path, model_class: GuruNet, output_path):
+def convert_checkpoint(ckpt_path, model_class: Type[pl.LightningModule], output_path):
     # Load the checkpoint
     checkpoint = model_class.load_from_checkpoint(ckpt_path)
 
@@ -573,6 +575,9 @@ def convert_checkpoint(ckpt_path, model_class: GuruNet, output_path):
 
 
 if __name__ == "__main__":
-    ckpt_path = "/home/pupperemeritus/DL/isic-2024-challenge/checkpoints/version_142/gurunet-epoch=48-val_pAUC=0.19894.ckpt"
-    output_path = "/home/pupperemeritus/DL/isic-2024-challenge/model.safetensors"
+    if len(sys.argv) == 3:
+        ckpt_path = sys.argv[1]
+        output_path = sys.argv[2]
+    else:
+        raise ValueError("Need to provide ckpt_path and output_path")
     convert_checkpoint(ckpt_path, GuruNet, output_path)
