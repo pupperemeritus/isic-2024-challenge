@@ -1,10 +1,10 @@
-# ISIC 2024 Challenge: LesionNet for Skin Lesion Classification
+# ISIC 2024 Challenge: GuruNet for Skin Lesion Classification
 
 This repository contains the modified PyTorch Lightning implementation of GuruNet from PET model, a deep learning model for classifying skin lesions using image and tabular metadata for the ISIC 2024 Challenge.
 
 ## Key Features
 
-- **LesionNet Model:** A custom PyTorch Lightning model designed for skin lesion classification, integrating image and metadata features.
+- **GuruNet Model:** A custom PyTorch Lightning model designed for skin lesion classification, integrating image and metadata features.
 
 - **Partial AUROC:** Taken from the official ISIC 2024 Challenge evaluation metric.
 
